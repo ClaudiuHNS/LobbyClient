@@ -1,13 +1,43 @@
 {
-	"compilerOptions": {
-		"target": "es5",
-		"sourceMap": true,
-		"experimentalDecorators": true
-	},
-	"exclude": [
-		"node_modules"
-	],
-	"files": [
-		"src/ui/main.ts"
-	]
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "strict": true,
+    "jsx": "preserve",
+    "importHelpers": true,
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "allowJs": true,
+    "emitDecoratorMetadata": true,
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true,
+    "baseUrl": ".",
+    "types": [
+      "node",
+      "mocha",
+      "chai"
+    ],
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    },
+    "lib": [
+      "es2015",
+      "dom",
+      "dom.iterable",
+      "scripthost",
+      "esnext.asynciterable"
+    ]
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "tests/**/*.ts",
+    "tests/**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

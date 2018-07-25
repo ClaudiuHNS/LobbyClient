@@ -2,48 +2,58 @@
   <div class="c-login">
     <header>
       <h1>
-        JOIN LEAGUE SANDBOX NOW BECAUSE LEAGUE OF MEMORIES SUCKS
+        JOIN LEAGUE SANBOX NOW
       </h1>
       <h4>
-        Be sure to use the same credentials than the League of Legends server
+        Please gank top
       </h4>
       
       <div class="c-divider">
         <img src="https://lolstatic-a.akamaihd.net/frontpage/apps/prod/signup/en_GB/0e436452d44f9a739dfe56d0dffe6c3ca02e63b8/assets/en_GB/assets/divider.png" alt="divide">
       </div>
     </header>
-    <form>
-      <div class="c-input">
-        <label>
-          Username
-        </label>
-        <input type="text" />
-      </div>
-      <div class="c-input">
-        <label>
-          Password
-        </label>
-        <input type="password" />
-      </div>
-      <div class="c-button">
-        <Button text="Login" />
-      </div>
-      Or just use git so we can see if you are a good LoM contributor <svg style="fill: #ffffff;" height="32" class="octicon octicon-mark-github" viewBox="0 0 16 16" version="1.1" width="32" aria-hidden="true"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg>
-    </form>
-    <div>
-      <ApolloQuery :query="query">
-      <!-- The result will automatically updated -->
-      <template slot-scope="{ result: { data, loading } }">
-        <!-- Some content -->
-        <div v-if="loading">Loading...</div>
-        <ul v-if="data">
-          <li v-for="user of data.users" :key="user.id" class="user">
-            {{ user.name }}
-          </li>
-        </ul>
-      </template>
-    </ApolloQuery>
-    </div>
+    <ApolloMutation
+      :mutation="connectMutation"
+      :variables="{
+        username,
+        iconId,
+      }"
+      @done="onDone">
+      <form slot-scope="{ mutate, loading, error }"
+        @submit.prevent="connect(mutate)">
+        <div class="c-input">
+          <label>
+            Path to LoL
+          </label>
+          <input type="text" 
+          v-model="path" />
+        </div>
+        <div class="c-input">
+          <label>
+            Username
+          </label>
+          <input type="text" 
+          v-model="username" />
+        </div>
+        <div class="c-input">
+          <label>
+            Host
+          </label>
+          <input type="text" 
+          v-model="host" />
+        </div>
+        <div class="c-input">
+          <label>
+            Port
+          </label>
+          <input type="text"
+          v-model="port" />
+        </div>
+        <div class="c-button">
+          <Button text="Login" />
+        </div>
+      </form>
+    </ApolloMutation>
   </div>
 </template>
 
@@ -52,6 +62,10 @@ import { Component, Vue } from 'vue-property-decorator';
 import Button from '@/components/Button.vue'; // @ is an alias to /src
 import IconSelector from '@/components/IconSelector.vue';
 import { GET_USERS } from '../graphql/queries';
+import { CONNECT } from '../graphql/mutations';
+
+import { setContext } from 'apollo-link-context';
+import { HttpLink } from 'apollo-link-http';
 
 @Component({
   components: {
@@ -60,18 +74,51 @@ import { GET_USERS } from '../graphql/queries';
   },
 })
 export default class Login extends Vue {
+  private path!: string;
+  private username!: string;
+  private host!: string;
+  private port!: string;
+
   public data() {
     return {
       query: GET_USERS,
+      connectMutation: CONNECT,
+      username: localStorage.getItem('username'),
+      iconId: 0,
+      host: localStorage.getItem('host'),
+      port: localStorage.getItem('port'),
+      path: localStorage.getItem('path'),
     };
   }
 
-  methods() {
-    return {
-      onDone: async function(result: any) {
-        console.log(result);
-      }
-    }
+  public async onDone(result: any) {
+    localStorage.setItem('token-lobby', result.data.connect);
+  }
+
+  public connect(callback: any) {
+    const uri = `http://${this.host}:${this.port}/graphql`;
+    // Save creds for faster login
+    localStorage.setItem('path', this.path);
+    localStorage.setItem('username', this.username);
+    localStorage.setItem('host', this.host);
+    localStorage.setItem('port', this.port);
+    const httpLink = new HttpLink({
+      uri,
+    });
+
+    const authLink = setContext((_, { headers }) => {
+      // get the authentication token from local storage if it exists
+      const token = localStorage.getItem('token-lobby');
+      // return the headers to the context so httpLink can read them
+      return {
+        headers: {
+          ...headers,
+          authorization: token ? token : '',
+        },
+      };
+    });
+    (this.$apollo.provider as any).defaultClient.link = authLink.concat(httpLink);
+    callback();
   }
 }
 </script>

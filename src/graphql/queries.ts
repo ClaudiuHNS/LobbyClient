@@ -8,3 +8,20 @@ export const GET_USERS = gql`
     }
   }
 `;
+
+export const GET_LOBBIES = gql `
+  query {
+    lobbies {
+      id
+      name
+      gamemode {
+        name
+      }
+      maxPlayer
+      playerCount
+      owner {
+        name
+      }
+    }
+  }
+`;

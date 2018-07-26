@@ -21,6 +21,10 @@
       @done="onDone">
       <form slot-scope="{ mutate, loading, error }"
         @submit.prevent="connect(mutate)">
+        <div class="c-loader" v-if="loading">
+          <div class="c-spinner">
+          </div>
+        </div>
         <div class="c-input">
           <label>
             Path to LoL
@@ -93,6 +97,8 @@ export default class Login extends Vue {
 
   public async onDone(result: any) {
     localStorage.setItem('token-lobby', result.data.connect);
+    this.$store.state.logged = true;
+    this.redirect();
   }
 
   public connect(callback: any) {
@@ -119,6 +125,10 @@ export default class Login extends Vue {
     });
     (this.$apollo.provider as any).defaultClient.link = authLink.concat(httpLink);
     callback();
+  }
+
+  public redirect() {
+    this.$router.replace(this.$route.params.wantedRoute || { name: 'home' });
   }
 }
 </script>

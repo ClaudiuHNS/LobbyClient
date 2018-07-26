@@ -1,6 +1,9 @@
 import Vue from 'vue';
+import Vuex from 'vuex';
 import App from './App.vue';
 import router from './router';
+
+Vue.use(Vuex);
 
 import VueMaterial from 'vue-material';
 import 'vue-material/dist/vue-material.min.css';
@@ -33,12 +36,22 @@ const apolloProvider = new VueApollo({
   defaultOptions: {
     $loadingKey: 'loading',
   },
+
 });
 
 Vue.config.productionTip = false;
 
+const store = new Vuex.Store({
+  state: {
+    logged: false,
+  },
+  mutations: {
+  },
+});
+
 new Vue({
   provide: apolloProvider.provide(),
   router,
+  store,
   render: (h) => h(App),
 }).$mount('#app');

@@ -1,7 +1,7 @@
 <template>
   <div class="c-login">
     <div class="c-background__video">
-      <video autoplay loop="true" :src="splashVideos[Math.floor(Math.random() * this.splashVideos.length)]" style="width: auto; height: auto; min-height: 88vh; min-width: 100vw; position: absolute; top: 11.3889%; left: 70.3906%; transform: translate(-70.3906%, -11.3889%); z-index: -1;"></video>
+      <video autoplay loop="true" :src="splashVideo" style="width: auto; height: auto; min-height: 88vh; min-width: 100vw; position: absolute; top: 11.3889%; left: 70.3906%; transform: translate(-70.3906%, -11.3889%); z-index: -1;"></video>
     </div>
     <header>
       <h1>
@@ -69,7 +69,7 @@
 import { Component, Vue } from 'vue-property-decorator';
 import Button from '@/components/Button.vue';
 import IconSelector from '@/components/IconSelector.vue';
-import { SPLASHSCREENS } from '../assets/staticData';
+import { RANDOM_SPLASHSCREEN } from '../assets/staticData';
 import { GET_USERS } from '../graphql/queries';
 import { CONNECT } from '../graphql/mutations';
 
@@ -99,7 +99,7 @@ export default class Login extends Vue {
       host: localStorage.getItem('host'),
       port: localStorage.getItem('port'),
       path: localStorage.getItem('path'),
-      splashVideos: SPLASHSCREENS,
+      splashVideo: RANDOM_SPLASHSCREEN,
     };
   }
 

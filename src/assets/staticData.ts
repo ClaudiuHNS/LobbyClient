@@ -1,4 +1,4 @@
-export const SPLASHSCREENS = [
+const splashScreens = [
     'https://universe-meeps.leagueoflegends.com/v1/assets/videos/aatrox-splashvideo.webm',
     'https://universe-meeps.leagueoflegends.com/v1/assets/videos/annie-splashvideo.webm',
     'https://universe-meeps.leagueoflegends.com/v1/assets/videos/aurelionsol-splashvideo.webm',
@@ -44,3 +44,6 @@ export const SPLASHSCREENS = [
     'https://universe-meeps.leagueoflegends.com/v1/assets/videos/taric-splashvideo.webm',
     'https://universe-meeps.leagueoflegends.com/v1/assets/videos/thresh-splashvideo.webm',
 ];
+
+export const SPLASHSCREENS = splashScreens;
+export const RANDOM_SPLASHSCREEN = splashScreens[Math.floor(Math.random() * splashScreens.length)];

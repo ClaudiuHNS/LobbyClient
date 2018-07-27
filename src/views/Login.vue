@@ -1,7 +1,7 @@
 <template>
   <div class="c-login">
     <div class="c-background__video">
-      <video autoplay loop="true" :src="splashVideo" style="width: auto; height: auto; min-height: 88vh; min-width: 100vw; position: absolute; top: 11.3889%; left: 70.3906%; transform: translate(-70.3906%, -11.3889%); z-index: -1;"></video>
+      <video autoplay="autoplay" loop="loop" muted="muted" :src="splashVideo" style="width: auto; height: auto; min-height: 88vh; min-width: 100vw; position: absolute; top: 11.3889%; left: 70.3906%; transform: translate(-70.3906%, -11.3889%); z-index: -1;"></video>
     </div>
     <header>
       <h1>

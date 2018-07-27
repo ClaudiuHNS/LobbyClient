@@ -93,7 +93,7 @@ body {
     right:0;
     bottom:0;
     opacity:.15;
-    filter:blur(8px)
+    filter:blur(8px);
 }
 .background-component.bg-welcome:after{
     content:"";

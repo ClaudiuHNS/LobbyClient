@@ -1,5 +1,8 @@
 <template>
   <div class="c-login">
+    <div class="c-background__video">
+      <video autoplay loop="true" :src="splashVideos[Math.floor(Math.random() * this.splashVideos.length)]" style="width: auto; height: auto; min-height: 88vh; min-width: 100vw; position: absolute; top: 11.3889%; left: 70.3906%; transform: translate(-70.3906%, -11.3889%); z-index: -1;"></video>
+    </div>
     <header>
       <h1>
         JOIN LEAGUE SANBOX NOW
@@ -54,6 +57,7 @@
           v-model="port" />
         </div>
         <div class="c-button">
+          <IconSelector :onChange="changeIcon" />
           <Button text="Login" />
         </div>
       </form>
@@ -63,8 +67,9 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import Button from '@/components/Button.vue'; // @ is an alias to /src
+import Button from '@/components/Button.vue';
 import IconSelector from '@/components/IconSelector.vue';
+import { SPLASHSCREENS } from '../assets/staticData';
 import { GET_USERS } from '../graphql/queries';
 import { CONNECT } from '../graphql/mutations';
 
@@ -82,6 +87,8 @@ export default class Login extends Vue {
   private username!: string;
   private host!: string;
   private port!: string;
+  private splashVideos!: string[];
+  private iconId!: number;
 
   public data() {
     return {
@@ -92,6 +99,7 @@ export default class Login extends Vue {
       host: localStorage.getItem('host'),
       port: localStorage.getItem('port'),
       path: localStorage.getItem('path'),
+      splashVideos: SPLASHSCREENS,
     };
   }
 
@@ -129,6 +137,10 @@ export default class Login extends Vue {
 
   public redirect() {
     this.$router.replace(this.$route.params.wantedRoute || { name: 'home' });
+  }
+
+  public changeIcon(selectedIcon: number) {
+    this.iconId = selectedIcon;
   }
 }
 </script>
@@ -205,5 +217,17 @@ header {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.c-background__video {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow: hidden;
+  z-index: -100;
+  background-color: rgba(11, 11, 11, 0.9);
+  filter: blur(5px) brightness(0.4);
 }
 </style>

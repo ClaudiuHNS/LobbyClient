@@ -10,14 +10,13 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 @Component
 export default class Button extends Vue {
   @Prop() private text!: string;
-  @Prop() private size!: string;
 }
 </script>
 
 <style scoped lang="scss">
 .o-button {
     display: inline-block;
-    padding: 23px 25px;
+    padding: 15px 25px;
     background: linear-gradient(180deg,#ecc572 0,#815500);
     font-family: Beaufort,serif;
     font-size: 1.0rem;
@@ -32,12 +31,11 @@ export default class Button extends Vue {
     z-index: 1;
     box-shadow: 0 0 25px rgba(0,0,0,.11);
     transition: color .2s;
-    min-width: 200px;
     max-width: 100%;
 }
 
 .o-button::before {
-        top: 2px;
+    top: 2px;
     left: 2px;
     right: 2px;
     bottom: 2px;
@@ -52,7 +50,7 @@ export default class Button extends Vue {
     outline-offset:2px;
     outline-width:1px;
     outline-style:dotted;
-    outline-color:#ecc572
+    outline-color:#ecc572;
 }
 
 .o-button:hover {

@@ -82,8 +82,8 @@ export default class Home extends Vue {
   .c-popup__image {
     display: inline-block;
     img {
-      width: 100px;
-      height: 100px;
+      width: 96px;
+      height: 96px;
       border-radius: 50%;
       vertical-align:middle;
       margin: 10px;
@@ -104,8 +104,8 @@ export default class Home extends Vue {
       background-size: cover;
       display: block;
       position: relative;
-      bottom: 137px;
-      right: 16px;
+      bottom: 133px;
+      right: 17px;
       animation-duration: 30s;
       animation-iteration-count: infinite;
       animation-name: spinner-popup;

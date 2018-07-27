@@ -1,27 +1,35 @@
 <template>
-    <div>
-        <md-dialog :md-active.sync="showDialog">
-            <md-dialog-title>Preferences</md-dialog-title>
+    <div class="c-icon-selector-input">
+        <md-dialog :md-active.sync="showDialog" class="c-icon-selector">
+            <md-dialog-title>Choose your summoner icon</md-dialog-title>
             <div class="c-icons-list">
                 <div v-for="icon in icons" :key="icon.id" class="c-icon">
-                    <img :src="'http://ddragon.leagueoflegends.com/cdn/8.14.1/img/profileicon/' + icon.image.full" />
+                    <img :src="'http://ddragon.leagueoflegends.com/cdn/8.14.1/img/profileicon/' + icon.image.full" :class="(selectedIcon == icon.id)?'active':''"
+                    @click="selectedIcon = icon.id" />
                 </div>
             </div>
-            <md-dialog-actions>
-                <md-button class="md-primary" @click="showDialog = false">Close</md-button>
-                <md-button class="md-primary" @click="showDialog = false">Save</md-button>
-            </md-dialog-actions>
+            <div class="c-validate">
+                <Button text="Save" @click.native="showDialog = false; if(onChange) onChange(selectedIcon)" />
+            </div>
         </md-dialog>
-        <md-button class="md-primary md-raised" @click="showDialog = true">Show Dialog</md-button>
+        <div @click="showDialog = true" class="c-icon-selector-input__icon" v-if="icons">
+            <img :src="'http://ddragon.leagueoflegends.com/cdn/8.14.1/img/profileicon/' + icons[selectedIcon].image.full"/>
+        </div>
     </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
+import Button from '@/components/Button.vue';
 
-@Component
+@Component({
+  components: {
+    Button,
+  },
+})
 export default class IconSelector extends Vue {
-  private selectedIcon: user.Icon = { id: 0, iconURL: '' };
+  @Prop() private onChange!: (selectedIcon: number) => void;
+  private selectedIcon!: number;
   private icons: any = [];
 
   public mounted() {
@@ -38,6 +46,7 @@ export default class IconSelector extends Vue {
       return {
           icons: this.icons,
           showDialog: false,
+          selectedIcon: this.$store.state.selectedIcon,
       };
   }
 }
@@ -47,19 +56,56 @@ export default class IconSelector extends Vue {
 .c-icon {
     display: inline-block;
     width: 64px;
-    height: 64px;
-    margin: 5px;
-    border: 2px solid #645127;
-    border-top-color: #c0ab71;
-    border-image: linear-gradient(to bottom,#c0ab71,#645127) 1 stretch;
+    height: 66px;
+    margin: 7.5px;
+    border: 1px solid #3E3501;
+    cursor: pointer;
 
     img {
         width: 64px;
         height: 64px;
         display: inline-block;
     }
+
+    .active {
+        border: 2px solid #ecc572;
+    }
 }
-md-dialog {
+
+.c-icons-list {
+    overflow-y: scroll;
+    padding: 15px;
+    border-top: 2px solid #1D2126;
+}
+
+.c-icon-selector {
+    color: #F0E6D2;
+    font-family: 'Beaufort';
+    text-transform: uppercase;
     max-width: 768px;
-  }
+    background-color: #010A13;
+    border: 2px solid #1D2126;
+}
+
+.c-icon-selector-input {
+    margin: 0 10px;
+    display: inline-block;
+    cursor: pointer;
+    
+    .c-icon-selector-input__icon {
+        border: 3px solid #8b7544;
+        img {
+            width: 64px;
+            height: 64px;
+            display: inline-block;
+        }
+    }
+}
+
+.c-validate {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 30px 0;
+}
 </style>

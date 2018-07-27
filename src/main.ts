@@ -44,6 +44,7 @@ Vue.config.productionTip = false;
 const store = new Vuex.Store({
   state: {
     logged: false,
+    selectedIcon: 0,
   },
   mutations: {
   },

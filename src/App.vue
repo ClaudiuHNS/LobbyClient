@@ -100,7 +100,6 @@ body {
       bottom: 5px;
       left: 5px;
       box-shadow: 0 0 10px 1px #000000;
-      z-index: 5;
     }
     .c-header__outer{
       flex-grow: 0;

@@ -68,9 +68,8 @@
         },
     })
     export default class Welcome extends Vue {
-
-        private currentStep:number = 0;
-        private progress:number = 0;
+        private currentStep: number = 0;
+        private progress: number = 0;
         private host!: string;
         private port!: string;
         private path!: string;
@@ -80,23 +79,26 @@
                 host: localStorage.getItem('host'),
                 port: localStorage.getItem('port'),
                 path: localStorage.getItem('path'),
+            };
+        }
+
+        private changeStep(step: number): void {
+            this.currentStep = step;
+        }
+
+        private test(event: any): void {
+            const input = event.target;
+            if (input.files && input.files[0]) {
+                this.path = input.files[0].path;
             }
         }
 
-        private changeStep(step:number) : void{
-            this.currentStep = step;
-            console.log("hi");
-        }
-
-        private test() :void{
-            this.path = document.getElementById("outputDir").files[0].path;
-        }
-
-        private changeProgress() : void{
-            if(this.progress == 0)
+        private changeProgress(): void {
+            if (this.progress === 0) {
                 this.progress = 100;
-            else
+            } else {
                 this.$router.replace(this.$route.params.wantedRoute || { name: 'login' });
+            }
         }
     }
 </script>
@@ -173,6 +175,19 @@
             height:46px;
             transition:0.5s all ease-out;
             background: linear-gradient(to right, #023860 , #0c8dc0);
+            &:after{
+                content: '';
+                display: block;
+                width: 100%;
+                height: 100%;
+                position: relative;
+                top: 0;
+                left: 0;
+                background: url(https://lolstatic-a.akamaihd.net/frontpage/apps/prod/multistep-signup/en_US/2af725f927413a425b4bed760127010434536ba0/assets/img/button-bg-pattern.png) repeat-x top left;
+                background-size: auto 100%;
+                background-position: 0 0;
+                animation: movingBG 100s linear infinite;
+            }
         }
     }
     .c-folder{

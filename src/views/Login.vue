@@ -13,53 +13,83 @@
           <img src="https://lolstatic-a.akamaihd.net/frontpage/apps/prod/signup/en_GB/0e436452d44f9a739dfe56d0dffe6c3ca02e63b8/assets/en_GB/assets/divider.png" alt="divide">
         </div>
       </header>
-      <ApolloMutation
-        :mutation="connectMutation"
-        :variables="{
+      <div class="c-login-form">
+        <ApolloMutation
+                :mutation="connectMutation"
+                :variables="{
           username,
           iconId,
         }"
-        @done="onDone">
-        <form slot-scope="{ mutate, loading, error }"
-          @submit.prevent="connect(mutate)">
-          <div class="c-loader" v-if="loading">
-            <div class="c-spinner">
+                @done="onDone">
+          <form slot-scope="{ mutate, loading, error }"
+                @submit.prevent="connect(mutate)">
+            <div class="c-loader" v-if="loading">
+              <div class="c-spinner">
+              </div>
+            </div>
+            <IconSelector :onChange="changeIcon" />
+            <div class="c-input" style="width: 310px;float: right;">
+              <label>
+                Summonername
+              </label>
+              <input type="text"
+                     v-model="username" />
+            </div>
+            <div class="c-input">
+              <label>
+                Host
+              </label>
+              <input type="text"
+                     v-model="host" />
+            </div>
+            <div class="c-input">
+              <label>
+                Port
+              </label>
+              <input type="text"
+                     v-model="port" />
+            </div>
+            <div class="c-input">
+              <label>
+                Path to LoL
+              </label>
+              <input type="text"
+                     v-model="path" />
+            </div>
+            <div class="c-button">
+              <Button text="Login" />
+            </div>
+          </form>
+        </ApolloMutation>
+        <div class="c-news">
+          <h2>Latest News:</h2>
+          <div class="c-news_wrapper">
+            <div class="c-news-item">
+              <h3>News Titel</h3>
+              <p>News Description</p>
+            </div>
+            <div class="c-news-item">
+              <h3>News Titel</h3>
+              <p>News Description</p>
+            </div>
+            <div class="c-news-item">
+              <h3>News Titel</h3>
+              <p>News Description</p>
+            </div>
+            <div class="c-news-item">
+              <h3>News Titel</h3>
+              <p>News Description</p>
+            </div>
+            <div class="c-news-item">
+              <h3>News Titel</h3>
+              <p>News Description</p>
             </div>
           </div>
-          <div class="c-input">
-            <label>
-              Path to LoL
-            </label>
-            <input type="text"
-            v-model="path" />
-          </div>
-          <div class="c-input">
-            <label>
-              Username
-            </label>
-            <input type="text"
-            v-model="username" />
-          </div>
-          <div class="c-input">
-            <label>
-              Host
-            </label>
-            <input type="text"
-            v-model="host" />
-          </div>
-          <div class="c-input">
-            <label>
-              Port
-            </label>
-            <input type="text"
-            v-model="port" />
-          </div>
-          <div class="c-button">
-            <IconSelector :onChange="changeIcon" />
-            <Button text="Login" />
-          </div>
-        </form>
-      </ApolloMutation>
+        </div>
+      </div>
+    </div>
+    <div class="c-version">
+      Version 4.20
     </div>
     <div class="c-background__video">
       <video autoplay="autoplay" loop="loop" muted="muted" :src="splashVideo" style="width: auto; height: auto; min-height: 88vh; min-width: 100vw; position: absolute; top: 11.3889%; left: 70.3906%; transform: translate(-70.3906%, -11.3889%); z-index: -1;"></video>
@@ -208,13 +238,70 @@ header {
   justify-content: center;
   overflow: hidden;
 }
-
+.c-version{
+  position:absolute;
+  bottom:10px;
+  right:15px;
+  color:white;
+  opacity:0.5;
+}
 .c-login {
-  width: 70%;
   margin-right: auto;
   margin-left: auto;
   z-index:9;
   position:relative;
+
+  .c-login-form{
+    display:flex;
+    align-items: center;
+    justify-content: space-around;
+    form{
+      width: 400px;
+    }
+    .c-news{
+      width: 400px;
+      height: 400px;
+      border: 1px solid rgba(213, 178, 110, 0.5);
+      background-color: rgba(0, 0, 0, 0.8);
+      overflow:hidden;
+      h2{
+        padding: 15px;
+        margin: 0;
+      }
+      .c-news_wrapper{
+        border-top:1px solid rgba(213, 178, 110, 0.75);
+        overflow-y: auto;
+        overflow-x: hidden;
+        height: 351px;
+        .c-news-item{
+          width: 100%;
+          height: auto;
+          border-bottom: 1px solid #32281f;
+          padding: 10px;
+          transition: all .3s;
+          cursor: pointer;
+          min-height: 100px;
+          margin-bottom: 5px;
+          position: relative;
+          overflow: hidden;
+          h3{
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding: 0 0 15px 0;
+            font-size: 16px;
+            color: #d3c7aa;
+          }
+          p{
+            color: #7d6033;
+            transition: color 1s cubic-bezier(.06,.81,0,.98);
+          }
+          &:hover{
+            border-color:rgba(213, 178, 110, 0.75);
+            background-color: rgba(255, 255, 255, 0.1);
+          }
+        }
+      }
+    }
+  }
 }
 
 .c-button {

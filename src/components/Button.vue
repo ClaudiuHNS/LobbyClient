@@ -46,13 +46,6 @@ export default class Button extends Vue {
     z-index: -1;
 }
 
-.o-button:focus{
-    outline-offset:2px;
-    outline-width:1px;
-    outline-style:dotted;
-    outline-color:#ecc572;
-}
-
 .o-button:hover {
     color:#c4b998
 }

@@ -1,40 +1,5 @@
 <template>
   <div class="c-home" v-if="this.$store.state.logged">
-    <ApolloQuery :query="getLobbies">
-      <template slot-scope="{ result: { data, loading } }">
-        <table>
-          <thead>
-            <tr>
-              <th>
-                Lobby name
-              </th>
-              <th>
-                Lobby owner
-              </th>
-              <th>
-                Gamemode
-              </th>
-              <th>
-                Users
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <template v-if="data" class="channels">
-              <tr
-                v-for="lobby of data.lobbies"
-                :key="lobby.id"
-              >
-                <td class="name">{{ lobby.name }}</td>
-                <td class="owner">{{ lobby.owner.name }}</td>
-                <td class="gamemode">{{ lobby.gamemode.name }}</td>
-                <td class="users">{{ lobby.playerCount }}/{{ lobby.maxPlayer }}</td>
-              </tr>
-            </template>
-          </tbody>
-        </table>
-      </template>
-    </ApolloQuery>
     <div class="c-popup">
       <div class="c-popup__image">
         <img src="http://ddragon.leagueoflegends.com/cdn/4.20.1/img/champion/Blitzcrank.png" />
@@ -42,17 +7,21 @@
       <div class="c-popup__text">
         <div class="c-popup__text__header">Congratulations!</div>
         You used the League Sandbox client!
-    </div>
       </div>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { GET_LOBBIES } from '../graphql/queries';
+import Button from '@/components/Button.vue';
+import PlayMenu from '@/components/PlayMenu.vue';
 
 @Component({
   components: {
+    Button,
+    PlayMenu,
   },
 })
 export default class Home extends Vue {
@@ -121,7 +90,7 @@ export default class Home extends Vue {
       transform: rotate(1turn)
     }
 
-    from {
+    to {
       transform: rotate(0deg)
     }
   }

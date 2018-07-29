@@ -10,9 +10,7 @@
               </div>
             </div>
             <div class="md-layout-item">
-              <a class="c-play-button">
-                Play
-              </a>
+              <PlayMenu />
             </div>
             <div class="md-layout-item" style="text-align: right;">
               Home | Lobbies | Runes | Masteries | Options
@@ -30,6 +28,18 @@
   </div>
 </template>
 
+<script>
+import { Component, Vue } from 'vue-property-decorator';
+import PlayMenu from '@/components/PlayMenu.vue';
+
+@Component({
+  components: {
+    PlayMenu,
+  },
+})
+export default class App extends Vue {}
+</script>
+
 <style lang="scss">
 /* Define a custom web font */
 @font-face {
@@ -44,6 +54,10 @@
   src: url('https://s.lolstatic.com/awesomefonts/1.0.0/Fonts/BeaufortforLOL-Medium.woff') format('woff'), 
   url('https://s.lolstatic.com/awesomefonts/1.0.0/Fonts/BeaufortforLOL-Bold.woff') format('woff'), 
   url('https://s.lolstatic.com/awesomefonts/1.0.0/Fonts/BeaufortforLOL-Italic.woff')  format('woff'),
+}
+
+*:focus{
+  outline:none;
 }
 
 html {
@@ -66,7 +80,7 @@ body {
 
 .c-header__inner {
   color: #f0e6d2;
-  height: 60px;
+  height: 64px;
 }
 
 .c-header__outer {
@@ -141,48 +155,79 @@ body {
 ::-webkit-scrollbar-corner {
   background: transparent;
 }
+
 .c-play-button{
-    cursor:pointer;
-    display:block;
-    text-transform:uppercase;
-    transition:color 1s cubic-bezier(.06,.81,0,.98);
-    vertical-align:middle;
-    text-decoration: none;
-    background:url(https://cdn.leagueoflegends.com/riotbar/prod/1.6.169/images/account/sprites-s2a5147f733.png) 0 -293px;
-    color:#b2d9db;
-    height:41px;
-    line-height:41px;
-    position:relative;
-    text-align:center;
-    width:129px;
-    z-index:0;
-    font-family: 'Beaufort';
-    font-size: 14px;
-    margin-right: auto;
-    margin-left: auto;
-    zoom: 1.5;
+  color: #cdfafa;
+  border-color: #0596aa;
+  background: linear-gradient(to bottom,#0596aa 0,#005a82 100%);
+  font-size: 16px;
+  font-weight: 700;
+  font-family: 'Beaufort';
+  font-size: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: .25rem;
+  line-height: 1;
+  width: 200px;
+  border: none;
+  padding: 15px 0;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 0 25px rgba(0,0,0,.11);
+  cursor: pointer;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 5px;
+  display: block;
 }
-.c-play-button:active{
-    background:url(https://cdn.leagueoflegends.com/riotbar/prod/1.6.169/images/account/sprites-s2a5147f733.png) 0 -181px;
-    color:#005a82
-}
-.c-play-button:before{
-    background:url(https://cdn.leagueoflegends.com/riotbar/prod/1.6.169/images/account/sprites-s2a5147f733.png) 0 -237px;
-    content:'';
-    height:100%;
-    left:0;
-    opacity:0;
-    position:absolute;
-    transition:opacity 1s cubic-bezier(.06,.81,0,.98);
-    top:0;
-    width:100%;
-    z-index:-1
-}
+
 .c-play-button:hover {
-  text-decoration: none !important;
+  background: linear-gradient(to bottom,#ecc572 0,#815500 100%);
 }
-.c-play-button:hover:before{
-    opacity:1
+
+.c-play-button::before {
+    content: '';
+    display: block;
+    position: absolute;
+    background: #111;
+    z-index: -1;
+    top: 2px;
+    left: 2px;
+    right: 2px;
+    bottom: 2px
+}
+
+.c-play-button::after {
+    content: '';
+    display: block;
+    background: url(https://lolstatic-a.akamaihd.net/frontpage/apps/prod/multistep-signup/en_US/2af725f927413a425b4bed760127010434536ba0/assets/img/button-bg-pattern.png) repeat-x top left;
+    background-size: auto 100%;
+    background-position: 0 0;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: .3;
+    -webkit-animation: movingBG 500s linear infinite;
+    animation: movingBG 500s linear infinite;
+    will-change: background-position;
+    transition: .4s ease;
+    -webkit-animation-play-state: running;
+    animation-play-state: running
+}
+
+.c-play-button:hover::after {
+  opacity: .7;
+}
+
+@keyframes movingBG {
+  from {
+    background-position: 0 0
+  }
+
+  to {
+    background-position: 10000px 0
+  }
 }
 
 .c-loader {

@@ -9,20 +9,26 @@
                 League Sandbox client
               </div>
             </div>
-            <div class="md-layout-item">
+            <div class="md-layout-item" style="-webkit-app-region: no-drag;">
               <PlayMenu />
             </div>
-            <div class="md-layout-item" style="text-align: right;">
+            <div class="md-layout-item" style="text-align: right;-webkit-app-region: no-drag;">
               Home | Lobbies | Runes | Masteries | Options
             </div>
           </div>
           <span v-else class="c-title">
             League Sandbox client
           </span>
+          <div class="win-controls">
+            <ul>
+              <li onclick="_minimize()">-</li>
+              <li onclick="_close()">X</li>
+            </ul>
+          </div>
         </div>
       </div>
       <router-view/>
-      <div class="background-component bg-welcome">
+      <div v-if="this.$store.state.logged" class="background-component bg-welcome">
       </div>
     </div>
   </div>
@@ -77,13 +83,31 @@ html {
 body {
   color: #d5b26e;
 }
-
+.win-controls ul{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+.win-controls li{
+  padding: 10px;
+  font-size: 30px;
+  line-height: 8px;
+  border: 1px solid #463714;
+  border-top: 0;
+  color: wheat;
+  cursor: pointer;
+}
 .c-header__inner {
   color: #f0e6d2;
   height: 64px;
 }
 
 .c-header__outer {
+  -webkit-app-region: drag;
   background: #010a13;
   border-bottom: 1px solid #463714;
 }

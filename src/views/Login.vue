@@ -1,67 +1,69 @@
 <template>
-  <div class="c-login">
+  <div>
+    <div class="c-login">
+      <header>
+        <h1>
+          JOIN LEAGUE SANBOX NOW
+        </h1>
+        <h4>
+          Please gank top
+        </h4>
+
+        <div class="c-divider">
+          <img src="https://lolstatic-a.akamaihd.net/frontpage/apps/prod/signup/en_GB/0e436452d44f9a739dfe56d0dffe6c3ca02e63b8/assets/en_GB/assets/divider.png" alt="divide">
+        </div>
+      </header>
+      <ApolloMutation
+        :mutation="connectMutation"
+        :variables="{
+          username,
+          iconId,
+        }"
+        @done="onDone">
+        <form slot-scope="{ mutate, loading, error }"
+          @submit.prevent="connect(mutate)">
+          <div class="c-loader" v-if="loading">
+            <div class="c-spinner">
+            </div>
+          </div>
+          <div class="c-input">
+            <label>
+              Path to LoL
+            </label>
+            <input type="text"
+            v-model="path" />
+          </div>
+          <div class="c-input">
+            <label>
+              Username
+            </label>
+            <input type="text"
+            v-model="username" />
+          </div>
+          <div class="c-input">
+            <label>
+              Host
+            </label>
+            <input type="text"
+            v-model="host" />
+          </div>
+          <div class="c-input">
+            <label>
+              Port
+            </label>
+            <input type="text"
+            v-model="port" />
+          </div>
+          <div class="c-button">
+            <IconSelector :onChange="changeIcon" />
+            <Button text="Login" />
+          </div>
+        </form>
+      </ApolloMutation>
+    </div>
     <div class="c-background__video">
       <video autoplay="autoplay" loop="loop" muted="muted" :src="splashVideo" style="width: auto; height: auto; min-height: 88vh; min-width: 100vw; position: absolute; top: 11.3889%; left: 70.3906%; transform: translate(-70.3906%, -11.3889%); z-index: -1;"></video>
     </div>
-    <header>
-      <h1>
-        JOIN LEAGUE SANBOX NOW
-      </h1>
-      <h4>
-        Please gank top
-      </h4>
-      
-      <div class="c-divider">
-        <img src="https://lolstatic-a.akamaihd.net/frontpage/apps/prod/signup/en_GB/0e436452d44f9a739dfe56d0dffe6c3ca02e63b8/assets/en_GB/assets/divider.png" alt="divide">
-      </div>
-    </header>
-    <ApolloMutation
-      :mutation="connectMutation"
-      :variables="{
-        username,
-        iconId,
-      }"
-      @done="onDone">
-      <form slot-scope="{ mutate, loading, error }"
-        @submit.prevent="connect(mutate)">
-        <div class="c-loader" v-if="loading">
-          <div class="c-spinner">
-          </div>
-        </div>
-        <div class="c-input">
-          <label>
-            Path to LoL
-          </label>
-          <input type="text" 
-          v-model="path" />
-        </div>
-        <div class="c-input">
-          <label>
-            Username
-          </label>
-          <input type="text" 
-          v-model="username" />
-        </div>
-        <div class="c-input">
-          <label>
-            Host
-          </label>
-          <input type="text" 
-          v-model="host" />
-        </div>
-        <div class="c-input">
-          <label>
-            Port
-          </label>
-          <input type="text"
-          v-model="port" />
-        </div>
-        <div class="c-button">
-          <IconSelector :onChange="changeIcon" />
-          <Button text="Login" />
-        </div>
-      </form>
-    </ApolloMutation>
   </div>
 </template>
 
@@ -211,6 +213,8 @@ header {
   width: 70%;
   margin-right: auto;
   margin-left: auto;
+  z-index:9;
+  position:relative;
 }
 
 .c-button {

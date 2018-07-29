@@ -1,12 +1,11 @@
 <template>
   <div id="app">
-    <div>
-      <div class="c-header__outer">
+      <div v-if="this.$store.state.logged" class="c-header__outer">
         <div class="c-header__inner">
-          <div v-if="this.$store.state.logged" class="md-layout">
+          <div class="md-layout">
             <div class="md-layout-item">
               <div class="c-title">
-                League Sandbox client
+                League Sandbox
               </div>
             </div>
             <div class="md-layout-item" style="-webkit-app-region: no-drag;">
@@ -16,22 +15,21 @@
               Home | Lobbies | Runes | Masteries | Options
             </div>
           </div>
-          <span v-else class="c-title">
-            League Sandbox client
-          </span>
-          <div class="win-controls">
-            <ul>
-              <li onclick="_minimize()">-</li>
-              <li onclick="_close()">X</li>
-            </ul>
-          </div>
         </div>
       </div>
+    <div class="c-content">
       <router-view/>
-      <div v-if="this.$store.state.logged" class="background-component bg-welcome">
-      </div>
     </div>
-  </div>
+      <div class="background-component bg-welcome">
+      </div>
+    <div class="win-controls">
+      <div class="dragbar"></div>
+      <ul>
+        <li onclick="_minimize()">-</li>
+        <li class="close" onclick="_close()">X</li>
+      </ul>
+    </div>
+    </div>
 </template>
 
 <script>
@@ -82,34 +80,84 @@ html {
 
 body {
   color: #d5b26e;
-}
-.win-controls ul{
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  position: absolute;
-  top: 0;
-  right: 0;
-}
-.win-controls li{
-  padding: 10px;
-  font-size: 30px;
-  line-height: 8px;
-  border: 1px solid #463714;
-  border-top: 0;
-  color: wheat;
-  cursor: pointer;
+  height:100%;
+  width:100%;
+  position:relative;
+  #app{
+    height:100%;
+    width:100%;
+    position:relative;
+    display:flex;
+    flex-direction: column;
+    &:before{
+      display: block;
+      content: "";
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      opacity: .15;
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      bottom: 5px;
+      left: 5px;
+      box-shadow: 0 0 10px 1px #000000;
+    }
+    .c-header__outer{
+      flex-grow: 0;
+      z-index:4;
+    }
+    .c-content {
+      flex-grow: 1;
+    }
+    .win-controls {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 100%;
+      height: 0;
+      display:flex;
+      z-index: 999;
+      .dragbar{
+        width:100%;
+        height:16px;
+        -webkit-app-region: drag;
+      }
+      ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        height: 28px;
+        li{
+          padding: 10px;
+          font-size: 30px;
+          line-height: 8px;
+          border: 1px solid #463714;
+          border-top: 0;
+          color: wheat;
+          cursor: pointer;
+          background: #010a13;
+          transition:0.1s all;
+          &:hover{
+            background-color:#343b42;
+          }
+        }
+        li.close{
+          font-size:16px;
+        }
+      }
+    }
+  }
 }
 .c-header__inner {
   color: #f0e6d2;
   height: 64px;
+  padding: 2px 0 0 13px;
 }
 
 .c-header__outer {
-  -webkit-app-region: drag;
   background: #010a13;
   border-bottom: 1px solid #463714;
+  z-index: 2;
 }
 
 .background-component{

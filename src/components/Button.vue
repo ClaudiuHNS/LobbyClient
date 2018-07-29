@@ -1,6 +1,6 @@
 <template>
-    <button class="o-button">
-        {{ text }}
+    <button class="o-button" @click="$emit('click')">
+        {{ text }}<small v-if="this.subtext != ''"><br/>{{ subtext }}</small>
     </button>
 </template>
 
@@ -9,7 +9,10 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component
 export default class Button extends Vue {
-  @Prop() private text!: string;
+  @Prop()
+  private text!: string;
+  @Prop()
+  private subtext!: string;
 }
 </script>
 
@@ -20,7 +23,7 @@ export default class Button extends Vue {
     background: linear-gradient(180deg,#ecc572 0,#815500);
     font-family: Beaufort,serif;
     font-size: 1.0rem;
-    font-weight: 400;
+    font-weight: 600;
     letter-spacing: 3px;
     text-transform: uppercase;
     color: #937341;

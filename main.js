@@ -1,6 +1,12 @@
 const {app, BrowserWindow} = require('electron');
 const ipc = require("electron").ipcMain;
-  
+
+if (process.argv.join(" ").indexOf("--dev") !== -1) {
+    process.env.LOBBYCLIENT_DEV = "true";
+} else {
+    process.env.LOBBYCLIENT_BUILD = "true";
+}
+
 let win;
   
 function createWindow () {
@@ -15,8 +21,13 @@ function createWindow () {
     // Disables fullscreen by doubleclick and drag
     win.setResizable(false);
 
-    win.loadURL('http://localhost:8080/');
-    if (process.argv.join(" ").indexOf("--dev") !== -1) {
+    if(process.env.LOBBYCLIENT_DEV) {
+        win.loadURL('http://localhost:8080/');
+    } else {
+        win.loadFile('index.html');
+    }
+
+    if (process.env.LOBBYCLIENT_DEV) {
         win.webContents.openDevTools({ mode: 'detach' });
     }
     win.on('closed', () => {

@@ -13,5 +13,16 @@
     </noscript>
     <div id="app"></div>
     <!-- built files will be auto injected -->
+
+    <script>
+        const ipc = require('electron').ipcRenderer;
+        window._close = function() {
+            ipc.send("close");
+        };
+
+        window._minimize = function() {
+            ipc.send("minimize");
+        };
+    </script>
   </body>
 </html>

@@ -1,6 +1,6 @@
 const {app, BrowserWindow} = require('electron');
 const ipc = require("electron").ipcMain;
-  
+
 let win;
   
 function createWindow () {
@@ -16,6 +16,7 @@ function createWindow () {
     win.setResizable(false);
 
     win.loadURL('http://localhost:8080/');
+
     if (process.argv.join(" ").indexOf("--dev") !== -1) {
         win.webContents.openDevTools({ mode: 'detach' });
     }

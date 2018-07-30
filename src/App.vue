@@ -1,27 +1,30 @@
 <template>
   <div id="app">
-      <div v-if="this.$store.state.logged" class="c-header__outer">
-        <div class="c-header__inner">
-          <div class="md-layout">
-            <div class="md-layout-item">
-              <div class="c-title">
-                League Sandbox
-              </div>
+    <div v-if="this.$store.state.logged" class="c-header__outer">
+      <div class="c-header__inner">
+        <div class="md-layout">
+          <div class="md-layout-item">
+            <div class="c-title">
+              League Sandbox
             </div>
-            <div class="md-layout-item" style="-webkit-app-region: no-drag;">
-              <PlayMenu />
-            </div>
-            <div class="md-layout-item" style="text-align: right;-webkit-app-region: no-drag;">
-              Home | Lobbies | Runes | Masteries | Options
-            </div>
+          </div>
+          <div class="md-layout-item" style="-webkit-app-region: no-drag;">
+            <PlayMenu />
+          </div>
+          <div class="md-layout-item" style="text-align: right;-webkit-app-region: no-drag;">
+            Home | Lobbies | Runes | Masteries | Options
           </div>
         </div>
       </div>
+    </div>
     <div class="c-content">
       <router-view/>
     </div>
-      <div class="background-component bg-welcome">
-      </div>
+    <div v-if="this.$store.state.logged">
+      <UserList />
+    </div>
+    <div class="background-component bg-welcome">
+    </div>
     <div class="win-controls">
       <div class="dragbar"></div>
       <ul>
@@ -29,16 +32,18 @@
         <li class="close" onclick="_close()">X</li>
       </ul>
     </div>
-    </div>
+  </div>
 </template>
 
 <script>
 import { Component, Vue } from 'vue-property-decorator';
 import PlayMenu from '@/components/PlayMenu.vue';
+import UserList from '@/components/UserList.vue';
 
 @Component({
   components: {
     PlayMenu,
+    UserList,
   },
 })
 export default class App extends Vue {}

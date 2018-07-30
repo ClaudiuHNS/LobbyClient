@@ -5,6 +5,9 @@ export const GET_USERS = gql`
     users {
       id
       name
+      rank
+      icon
+      availability
     }
   }
 `;

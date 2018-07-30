@@ -4,8 +4,8 @@
             <md-dialog-title>Choose your summoner icon</md-dialog-title>
             <div class="c-icons-list">
                 <div v-for="icon in icons" :key="icon.id" class="c-icon">
-                    <img :src="'http://ddragon.leagueoflegends.com/cdn/8.14.1/img/profileicon/' + icon.image.full" :class="(selectedIcon == icon.id)?'active':''"
-                    @click="selectedIcon = icon.id" />
+                    <img :src="'http://ddragon.leagueoflegends.com/cdn/8.14.1/img/profileicon/' + icon + '.png'" :class="(selectedIcon == icon)?'active':''"
+                    @click="selectedIcon = icon" />
                 </div>
             </div>
             <div class="c-validate">
@@ -13,7 +13,7 @@
             </div>
         </md-dialog>
         <div @click="showDialog = true" class="c-icon-selector-input__icon" v-if="icons">
-            <img :src="'http://ddragon.leagueoflegends.com/cdn/8.14.1/img/profileicon/' + icons[selectedIcon].image.full"/>
+            <img :src="'http://ddragon.leagueoflegends.com/cdn/8.14.1/img/profileicon/' + icons[selectedIcon] + '.png'"/>
         </div>
     </div>
 </template>
@@ -21,6 +21,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import Button from '@/components/Button.vue';
+import {SUMMONER_ICONS } from '../assets/staticData';
 
 @Component({
   components: {
@@ -32,19 +33,9 @@ export default class IconSelector extends Vue {
   private selectedIcon!: number;
   private icons: any = [];
 
-  public mounted() {
-      fetch('http://ddragon.leagueoflegends.com/cdn/8.14.1/data/en_US/profileicon.json')
-        .then((response) => {
-            return response.json();
-        })
-        .then((myJson) => {
-            this.icons = myJson.data;
-        });
-  }
-
   public data() {
       return {
-          icons: this.icons,
+          icons: SUMMONER_ICONS,
           showDialog: false,
           selectedIcon: this.$store.state.selectedIcon,
       };

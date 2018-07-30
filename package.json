@@ -28,7 +28,8 @@
     "vue-material": "1.0.0-beta-10.2",
     "vue-property-decorator": "^7.0.0",
     "vue-router": "^3.0.1",
-    "vuex": "3.0.1"
+    "vuex": "3.0.1",
+    "electron-packager": "^12.1.0"
   },
   "devDependencies": {
     "@types/chai": "^4.1.0",

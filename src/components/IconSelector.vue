@@ -79,15 +79,15 @@ export default class IconSelector extends Vue {
 }
 
 .c-icon-selector-input {
-    margin: 0 10px;
+    margin:0;
     display: inline-block;
     cursor: pointer;
     
     .c-icon-selector-input__icon {
         border: 3px solid #8b7544;
         img {
-            width: 64px;
-            height: 64px;
+            width: 76px;
+            height: 76px;
             display: inline-block;
         }
     }

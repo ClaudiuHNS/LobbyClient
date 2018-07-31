@@ -1,4 +1,4 @@
-const {app, BrowserWindow} = require('electron');
+const {app, BrowserWindow, protocol} = require('electron');
 const ipc = require("electron").ipcMain;
 
 if (process.argv.join(" ").indexOf("--dev") !== -1) {
@@ -8,8 +8,18 @@ if (process.argv.join(" ").indexOf("--dev") !== -1) {
 }
 
 let win;
+
+const isAlreadyOpen = app.makeSingleInstance((commandLine, workingDirectory) => {
+    if (win) {
+        win.webContents.send('lspm', commandLine[1]);
+    }
+});
+
+if (isAlreadyOpen) {
+    app.quit()
+}
   
-function createWindow () {
+function createWindow () {    
     win = new BrowserWindow({width: 1280, height: 720, frame: false, titleBarStyle: 'hidden'});
 
     // MaxOS only :(
@@ -27,8 +37,9 @@ function createWindow () {
         win.loadFile('index.html');
     }
 
+    win.webContents.openDevTools({ mode: 'detach' });
     if (process.env.LOBBYCLIENT_DEV) {
-        win.webContents.openDevTools({ mode: 'detach' });
+        //win.webContents.openDevTools({ mode: 'detach' });
     }
     win.on('closed', () => {
       win = null;
@@ -56,3 +67,5 @@ app.on('activate', () => {
         createWindow();
     }
 });
+
+app.setAsDefaultProtocolClient('lspm');

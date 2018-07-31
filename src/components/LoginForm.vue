@@ -37,7 +37,7 @@ export default class Button extends Vue {
 }
 
 .o-button::before {
-        top: 2px;
+    top: 2px;
     left: 2px;
     right: 2px;
     bottom: 2px;

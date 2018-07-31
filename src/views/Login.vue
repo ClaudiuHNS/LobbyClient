@@ -136,7 +136,7 @@ export default class Login extends Vue {
   }
 
   public async onDone(result: any) {
-    localStorage.setItem('token-lobby', result.data.connect);
+    localStorage.setItem('token-lobby', result.data.connect.token);
     this.$store.state.logged = true;
     this.redirect();
   }

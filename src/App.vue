@@ -20,8 +20,16 @@
     <div class="c-content">
       <router-view/>
     </div>
-    <div v-if="this.$store.state.logged">
-      <UserList />
+    <div v-if="this.$store.state.logged && this.popup.show">
+      <div class="c-popup">
+        <div class="c-popup__image">
+          <img :src="this.popup.image" />
+        </div>
+        <div class="c-popup__text">
+          <div class="c-popup__text__header">{{ this.popup.title }}</div>
+          <div class="c-popup__text__content">{{ this.popup.content }}</div>
+        </div>
+      </div>
     </div>
     <div class="background-component bg-welcome">
     </div>
@@ -35,7 +43,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import PlayMenu from '@/components/PlayMenu.vue';
 import UserList from '@/components/UserList.vue';
@@ -46,7 +54,42 @@ import UserList from '@/components/UserList.vue';
     UserList,
   },
 })
-export default class App extends Vue {}
+export default class App extends Vue {
+  private popup!: any;
+
+  public data() {
+    return {
+      popup: {
+        show: false,
+        title: '',
+        content: '',
+        image: '',
+      },
+    };
+  }
+
+  public mounted() {
+    (window as any)._ipc.on('lspm', (event: any, args: any) => {
+      const url = args;
+      let packageInfos = url.replace(/(lspm:\/\/)([a-z0-9].)*\//, '');
+      packageInfos = packageInfos.split('/');
+      const packageCreator = packageInfos[0];
+      const packageName = packageInfos[1];
+      const packageVersion = packageInfos[2];
+
+      this.popup = {
+        show: true,
+        title: 'Downloading package...',
+        content: 'Downloading ' + packageName + ' by ' + packageCreator,
+        image: '',
+      };
+    });
+  }
+
+  public installPackage(packageName: string, version: string) {
+    // Starting download
+  }
+}
 </script>
 
 <style lang="scss">

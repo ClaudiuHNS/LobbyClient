@@ -1,14 +1,6 @@
 <template>
   <div class="c-home" v-if="this.$store.state.logged">
-    <div class="c-popup">
-      <div class="c-popup__image">
-        <img src="http://ddragon.leagueoflegends.com/cdn/4.20.1/img/champion/Blitzcrank.png" />
-      </div>
-      <div class="c-popup__text">
-        <div class="c-popup__text__header">Congratulations!</div>
-        You used the League Sandbox client!
-      </div>
-    </div>
+    
   </div>
 </template>
 

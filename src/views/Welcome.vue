@@ -90,10 +90,11 @@
 
         private onChangeInput(event: any): void {
             const input = event.target;
-            if(input.value != "")
+            if ( input.value !== '' ) {
                 this.path = input.value;
-            else
-                this.path = null;
+            } else {
+                this.path = '';
+            }
         }
 
         private onChangeFileInput(event: any): void {
@@ -112,8 +113,7 @@
         }
 
         private finishPath(): void {
-            //CHECK PATH ?
-            localStorage.setItem("path", this.path);
+            localStorage.setItem('path', this.path);
             this.$router.replace(this.$route.params.wantedRoute || { name: 'login' });
         }
     }

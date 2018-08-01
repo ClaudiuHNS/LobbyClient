@@ -13,8 +13,8 @@ export default class Button extends Vue {
   private text!: string;
   @Prop()
   private subtext!: string;
-    @Prop({ default: false })
-    disabled: boolean;
+  @Prop()
+  private disabled: boolean = false;
 }
 </script>
 

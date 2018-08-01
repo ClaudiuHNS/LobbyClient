@@ -1,0 +1,16 @@
+environment:
+  nodejs_version: "10"
+
+install:
+  - git --version
+  - node --version
+  - yarn --version
+  - ps: Install-Product node $env:nodejs_version
+  - yarn
+
+cache:
+  - node_modules -> yarn.lock
+
+build_script:
+  - yarn build
+  - yarn package:win

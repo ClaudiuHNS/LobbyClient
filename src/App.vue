@@ -4,15 +4,20 @@
       <div class="c-header__inner">
         <div class="md-layout">
           <div class="md-layout-item">
-            <div class="c-title">
+            <div class="c-title" style="z-index:9999;">
               League Sandbox
             </div>
           </div>
-          <div class="md-layout-item" style="-webkit-app-region: no-drag;">
+          <div class="sm-layout-item" style="-webkit-app-region: no-drag;">
             <PlayMenu />
           </div>
-          <div class="md-layout-item" style="text-align: right;-webkit-app-region: no-drag;">
-            Home | Lobbies | Runes | Masteries | Options
+          <div class="md-layout-item" style="z-index:9999;-webkit-app-region: no-drag;">
+            <ul class="main-nav">
+              <li>Home</li>
+              <li>Lobbies</li>
+              <li>Masteries</li>
+              <li>Runes</li>
+            </ul>
           </div>
         </div>
       </div>
@@ -200,11 +205,55 @@ body {
   color: #f0e6d2;
   height: 64px;
   padding: 2px 0 0 13px;
+  &:before {
+    display: block;
+    content: "";
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-bottom: none;
+    height: 60px;
+    opacity: .15;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    bottom: 5px;
+    left: 5px;
+    box-shadow: 0 0 10px 1px #000000;
+  }
+  ul.main-nav{
+    list-style:none;
+    padding:0;
+    margin:0;
+    display:flex;
+    justify-content: space-evenly;
+    height: 100%;
+    margin-top: 3px;
+    padding: 1px 76px 0 18px;
+    li{
+      text-transform: uppercase;
+      line-height: 56px;
+      font-size: 18px;
+      font-weight: bold;
+      font-family: 'Beaufort';
+      padding: 0 10px 0 9px;
+      width: 100%;
+      border-left: 1px solid;
+      border-right: 1px solid #463714;
+      border-image: linear-gradient(to top, #463714, rgba(255, 255, 255, 0.1)) 1 100%;
+      text-align: center;
+      cursor: pointer;
+      transition: 0.2s all;
+      &:hover{
+        background-color: rgba(255, 255, 255, 0.05);
+        box-shadow: inset 0 -10px 15px rgba(0, 243, 255, 0.23);
+      }
+    }
+  }
 }
 
 .c-header__outer {
   background: #010a13;
   border-bottom: 1px solid #463714;
+  box-shadow: 0 0 50px black;
   z-index: 2;
 }
 

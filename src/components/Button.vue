@@ -1,5 +1,5 @@
 <template>
-    <button class="o-button" @click="$emit('click')">
+    <button class="o-button" @click="$emit('click')" :disabled="disabled">
         {{ text }}<small v-if="this.subtext != ''"><br/>{{ subtext }}</small>
     </button>
 </template>
@@ -13,6 +13,8 @@ export default class Button extends Vue {
   private text!: string;
   @Prop()
   private subtext!: string;
+    @Prop({ default: false })
+    disabled: boolean;
 }
 </script>
 
@@ -35,6 +37,16 @@ export default class Button extends Vue {
     box-shadow: 0 0 25px rgba(0,0,0,.11);
     transition: color .2s;
     max-width: 100%;
+    &:disabled{
+        color: white;
+        background: linear-gradient(180deg, white, #ada08f);
+        cursor: not-allowed;
+        opacity:0.4;
+        &:hover{
+            color: white;
+            background: linear-gradient(180deg, white, #ada08f);
+        }
+    }
 }
 
 .o-button::before {

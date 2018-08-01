@@ -17,5 +17,5 @@ build_script:
 
 artifacts:
   - path: release-builds/leaguesandbox-lobbyclient-win32-x64
-    name: Windows release
+    name: Windows-release-$(APPVEYOR_BUILD_VERSION)
     type: zip

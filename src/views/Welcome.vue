@@ -36,7 +36,7 @@
                 </div>
                 <div class="c-choice">
                     <Button @click="changeStep(0)" text="Cancel"/>
-                    <Button @click="changeProgress" text="TEST" />
+                    <Button @click="changeProgress" text="START DOWNLOAD" />
                 </div>
             </div>
         </div>
@@ -45,13 +45,15 @@
             <div class="c-description">
                 <p>Oh, apparently you have the 4.20 Client already installed?</p>
                 <p>You are an experienced user, aren't you ( ͡° ͜ʖ ͡°)</p>
-                <strong><p style="font-size:24px;">Please select your League Of Legends.exe File to verify your existant installation:</p></strong>
+                <strong><p style="font-size:29px;">Please select the folder where your League Of Legends.exe file is placed, to verify your existent installation:</p></strong>
                 <div class="c-folder">
-                    <label for="outputDir">{{ this.path }}</label><br/>
-                    <input type="file" @change="test" id="outputDir" class="btn btn-primary btn-fill" webkitdirectory="" directory=""/>
+                    <input type="text" @change="onChangeInput" name="outputDir" placeholder="Please select or input a path" v-bind:value="this.path"/>
+                    <label for="outputDir">Select</label>
+                    <input type="file" @change="onChangeFileInput" id="outputDir" class="file-selector-hide" webkitdirectory="" directory=""/>
                 </div>
                 <div class="c-choice">
                     <Button @click="changeStep(0)" text="Cancel"/>
+                    <Button @click="finishPath(0)" :disabled="this.path == null" text="Next" subtext="Select a folder to continue"/>
                 </div>
             </div>
         </div>
@@ -68,7 +70,7 @@
         },
     })
     export default class Welcome extends Vue {
-        private currentStep: number = 0;
+        private currentStep: number = 2;
         private progress: number = 0;
         private host!: string;
         private port!: string;
@@ -86,7 +88,15 @@
             this.currentStep = step;
         }
 
-        private test(event: any): void {
+        private onChangeInput(event: any): void {
+            const input = event.target;
+            if(input.value != "")
+                this.path = input.value;
+            else
+                this.path = null;
+        }
+
+        private onChangeFileInput(event: any): void {
             const input = event.target;
             if (input.files && input.files[0]) {
                 this.path = input.files[0].path;
@@ -99,6 +109,12 @@
             } else {
                 this.$router.replace(this.$route.params.wantedRoute || { name: 'login' });
             }
+        }
+
+        private finishPath(): void {
+            //CHECK PATH ?
+            localStorage.setItem("path", this.path);
+            this.$router.replace(this.$route.params.wantedRoute || { name: 'login' });
         }
     }
 </script>
@@ -191,7 +207,55 @@
         }
     }
     .c-folder{
+        margin:auto;
         margin-bottom:50px;
+        width:65%;
+        display:flex;
+
+        .file-selector-hide{
+            width: 0.1px;
+            height: 0.1px;
+            opacity: 0;
+            overflow: hidden;
+            position: absolute;
+            z-index: -1;
+        }
+        label[for="outputDir"]{
+            text-align:center;
+            width:150px;
+            font-size: 1.25em;
+            padding:10px;
+            height:56px;
+            line-height:31px;
+            text-transform:uppercase;
+            border: 1px solid #785b28;
+            font-weight: 700;
+            color: white;
+            background-color: #1f3958;
+            cursor:pointer;
+            transition:0.2s all;
+            background: url(https://lolstatic-a.akamaihd.net/frontpage/apps/prod/multistep-signup/en_US/2af725f927413a425b4bed760127010434536ba0/assets/img/button-bg-pattern.png) repeat-x top left;
+            background-size: auto 100%;
+            background-position: 0 0;
+            animation: movingBG 1000s linear infinite;
+            &:hover{
+                background-color: #27456c;
+            }
+        }
+        input[type="text"]{
+            color: #f0e6d2;
+            text-align:center;
+            width:100%;
+            font-family: 'Beaufort';
+            background-color: #000;
+            background: #1e2328;
+            border: 1px solid #785b28;
+            box-shadow: inset 0 3px 5px rgba(1,10,19,.5);
+            padding: 8px 30px 8px 10px;
+            border-radius: 0;
+            -webkit-transition: all .2s;
+            transition: all .2s;
+        }
     }
     .c-choice{
         display: flex;

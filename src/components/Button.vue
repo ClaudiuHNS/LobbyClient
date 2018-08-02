@@ -1,5 +1,5 @@
 <template>
-    <button class="o-button" @click="$emit('click')" :disabled="disabled">
+    <button class="o-button" @click="$emit('click')" :disabled="this.isDisabled == 'true'">
         {{ text }}<small v-if="this.subtext != ''"><br/>{{ subtext }}</small>
     </button>
 </template>
@@ -14,7 +14,13 @@ export default class Button extends Vue {
   @Prop()
   private subtext!: string;
   @Prop()
-  private disabled: boolean = false;
+  private disabled!: boolean;
+
+  public data() {
+      return {
+          isDisabled: this.disabled,
+      };
+  }
 }
 </script>
 

@@ -1,6 +1,6 @@
 <template>
   <div class="c-home" v-if="this.$store.state.logged">
-    
+    <video autoplay="autoplay" loop="loop" muted="muted" src="../assets/test.webm" style="width: 500px; height: 500px;"></video>
   </div>
 </template>
 

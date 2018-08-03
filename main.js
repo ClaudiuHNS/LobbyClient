@@ -1,5 +1,9 @@
 const {app, BrowserWindow, protocol} = require('electron');
 const ipc = require("electron").ipcMain;
+const fs = require('fs');
+const JSZip = require("jszip");
+const https = require('https');
+const url = require('url');
 
 if (process.argv.join(" ").indexOf("--dev") !== -1) {
     process.env.LOBBYCLIENT_DEV = "true";
@@ -52,6 +56,67 @@ function createWindow () {
     ipc.on("minimize", () => {
         win && win.minimize();
     });
+
+    ipc.on("installPackage", (event, packageUrl, filename, path) => {
+        downloadPackage(packageUrl, filename, path);
+    });
+}
+
+function downloadPackage(packageUrl, filename, path) {
+    const packagesDir = path + '/lspm/';
+    if (!fs.existsSync(packagesDir)){
+      fs.mkdirSync(packagesDir);
+    }
+    const filePath = packagesDir + filename;
+    const file = fs.createWriteStream(filePath);
+    const timeout = 30000;
+
+    const timeoutWrapper = (req) => {
+      return () => {
+        req.abort();
+        win.webContents.send('install-info', 'File transfer timeout!');
+      };
+    };
+
+    const request = https.get(packageUrl).on('response', (res) => {
+      const len = parseInt(res.headers['content-length'], 10);
+      let downloaded = 0;
+
+      res.on('data', (chunk) => {
+          file.write(chunk);
+          downloaded += chunk.length;
+          win.webContents.send('install-info', 'Downloading ' + (100.0 * downloaded / len).toFixed(2) + '%');
+          clearTimeout(timeoutId);
+          timeoutId = setTimeout(fn, timeout);
+      }).on('end', () => {
+          clearTimeout(timeoutId);
+          file.end();
+          manageDependencies(packagesDir, filePath, filename);
+          win.webContents.send('install-info', 'Download finished');
+      }).on('error', (err) => {
+          file.emit('error', new Error(https.STATUS_CODES[res.statusCode]));
+          clearTimeout( timeoutId );
+          win.webContents.send('install-info', err.message);
+      });
+    });
+
+    const fn = timeoutWrapper(request);
+    let timeoutId = setTimeout(fn, timeout);
+}
+
+function manageDependencies(packagesDir, filePath, filename) {
+    const packageLock = packagesDir + 'packages.lock';
+    let packages = {
+        installed: []
+    };
+    if(fs.existsSync(packageLock)) {
+        packages = JSON.parse(fs.readFileSync(packageLock, 'utf8'));
+    }
+    packages.installed.push(filename);
+
+    const file = fs.createWriteStream(packageLock);
+    file.write(JSON.stringify(packages));
+    file.end();
 }
   
 app.on('ready', createWindow);

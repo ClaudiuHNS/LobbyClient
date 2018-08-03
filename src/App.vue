@@ -52,8 +52,6 @@
 import { Component, Vue } from 'vue-property-decorator';
 import PlayMenu from '@/components/PlayMenu.vue';
 import UserList from '@/components/UserList.vue';
-import url from 'url';
-import http from 'http';
 
 @Component({
   components: {
@@ -76,8 +74,7 @@ export default class App extends Vue {
   }
 
   public mounted() {
-    (window as any)._ipc.on('lspm', (event: any, args: any) => {
-      const packageLink = args;
+    (window as any)._ipc.on('lspm', (event: any, packageLink: any) => {
       let packageInfos = packageLink.replace(/(lspm:\/\/)/, '');
       packageInfos = packageInfos.split('/');
       const hostPackage = packageInfos[0];
@@ -93,7 +90,15 @@ export default class App extends Vue {
       };
       this.installPackage(hostPackage, packageCreator, packageName, packageVersion);
     });
-    (window as any)._installPackage = this.installPackage;
+    (window as any)._ipc.on('install-info', (event: any, result: any) => {
+      this.popup = {
+        show: true,
+        title: 'Downloading package...',
+        content: result,
+        image: '',
+      };
+    });
+    (window as any)._debugInstallPackage = this.installPackage;
   }
 
   public installPackage(host: string, packageCreator: string, packageName: string, packageVersion: string) {
@@ -106,61 +111,10 @@ export default class App extends Vue {
       image: '',
     };
 
-    console.log(host, packageCreator, packageName, packageVersion);
-    this.downloadPackage(`https://${host}/media/${packageCreator}-${packageName}-${packageVersion}.zip`,
+    (window as any)._installPackage(`https://${host}/media/${packageCreator}-${packageName}-${packageVersion}.zip`,
       `${packageCreator}-${packageName}-${packageVersion}.zip`,
-      (res: any) => {
-        if(res == null) {
-          this.popup = {
-            show: true,
-            title: 'Download complete!',
-            content: 'Downloaded ' + packageName + ' by ' + packageCreator,
-            image: '',
-          };
-        }
-      }
+      localStorage.getItem('path'),
     );
-  }
-
-  private downloadPackage(packageUrl: string, filename: string, callback: any) {
-    const fs = (window as any).require('fs');
-    const packagesDir = (localStorage.getItem('path') as string) + '/lspm/';
-    if (!fs.existsSync(packagesDir)){
-      fs.mkdirSync(packagesDir);
-    }
-    const file = fs.createWriteStream(packagesDir + filename);
-    const timeout = 30000;
-
-    const timeoutWrapper = (req: any) => {
-      return () => {
-        req.abort();
-        callback('File transfer timeout!');
-      };
-    };
-
-    const request = http.get(packageUrl).on('response', (res: any) => {
-      const len = parseInt(res.headers['content-length'], 10);
-      let downloaded = 0;
-
-      res.on('data', (chunk: any) => {
-          file.write(chunk);
-          downloaded += chunk.length;
-          console.log('Downloading ' + (100.0 * downloaded / len).toFixed(2) + '% ' + downloaded + ' bytes');
-          clearTimeout(timeoutId);
-          timeoutId = setTimeout(fn, timeout);
-      }).on('end', () => {
-          clearTimeout(timeoutId);
-          file.end();
-          callback(null);
-      }).on('error', (err: any) => {
-          file.emit('error', new Error(http.STATUS_CODES[res.statusCode]));
-          clearTimeout( timeoutId );
-          callback(err.message);
-      });
-    });
-
-    const fn = timeoutWrapper(request);
-    let timeoutId = setTimeout(fn, timeout);
   }
 }
 </script>

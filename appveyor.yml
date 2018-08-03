@@ -14,8 +14,12 @@ cache:
 build_script:
   - yarn build
   - yarn package:win
+  - yarn package:mac
 
 artifacts:
   - path: release-builds/leaguesandbox-lobbyclient-win32-x64
     name: Windows-release-$(APPVEYOR_BUILD_VERSION)
+    type: zip
+  - path: release-builds/leaguesandbox-lobbyclient-darwin-x64
+    name: Mac-release-$(APPVEYOR_BUILD_VERSION)
     type: zip

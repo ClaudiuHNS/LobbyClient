@@ -2,11 +2,16 @@ environment:
   nodejs_version: "10"
 
 install:
+  - ps: Install-Product node $env:nodejs_version
   - git --version
   - node --version
   - yarn --version
-  - ps: Install-Product node $env:nodejs_version
   - yarn
+
+test:
+  - node --version
+  - yarn --version
+  - yarn test:e2e
 
 cache:
   - node_modules -> yarn.lock

@@ -70,7 +70,7 @@
         },
     })
     export default class Welcome extends Vue {
-        private currentStep: number = 2;
+        private currentStep: number = 0;
         private progress: number = 0;
         private host!: string;
         private port!: string;

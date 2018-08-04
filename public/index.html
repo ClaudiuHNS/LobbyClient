@@ -15,6 +15,7 @@
     <!-- built files will be auto injected -->
 
     <script>
+      if (typeof window !== 'undefined' && typeof window.process === 'object' && window.process.type === 'renderer') {
         const ipc = require('electron').ipcRenderer;
 
         window._ipc = ipc;
@@ -30,6 +31,7 @@
         window._installPackage = function(host, packageCreator, packageName, packageVersion, path) {
           ipc.send("installPackage", host, packageCreator, packageName, packageVersion, path);
         }
+      }
     </script>
   </body>
 </html>

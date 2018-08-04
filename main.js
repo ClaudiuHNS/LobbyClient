@@ -87,7 +87,7 @@ function downloadPackage(host, packageCreator, packageName, packageVersion, path
       };
     };
 
-    const request = https.get(`https://${host}/media/${packageCreator}-${packageName}-${packageVersion}.zip`).on('response', (res) => {
+    const request = https.get(`https://${host}/package/download/${packageCreator}/${packageName}/${packageVersion}`).on('response', (res) => {
       const len = parseInt(res.headers['content-length'], 10);
       let downloaded = 0;
 

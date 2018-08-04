@@ -21,7 +21,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import Button from '@/components/Button.vue';
-import {SUMMONER_ICONS } from '../assets/staticData';
+import { SUMMONER_ICONS } from '../assets/staticData';
 
 @Component({
   components: {

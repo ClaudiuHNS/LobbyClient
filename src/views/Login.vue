@@ -3,64 +3,47 @@
     <div class="c-login">
       <header>
         <h1>
-          JOIN LEAGUE SANBOX NOW
+          JOIN LEAGUE SANDBOX NOW
         </h1>
         <h4>
           Please gank top
         </h4>
-
         <div class="c-divider">
           <img src="https://lolstatic-a.akamaihd.net/frontpage/apps/prod/signup/en_GB/0e436452d44f9a739dfe56d0dffe6c3ca02e63b8/assets/en_GB/assets/divider.png" alt="divide">
         </div>
       </header>
       <div class="c-login-form">
-        <ApolloMutation
-                :mutation="connectMutation"
-                :variables="{
-          username,
-          iconId,
-        }"
-                @done="onDone">
-          <form slot-scope="{ mutate, loading, error }"
-                @submit.prevent="connect(mutate)">
-            <div class="c-loader" v-if="loading">
-              <div class="c-spinner">
-              </div>
+        <form @submit.prevent="connect()">
+          <div class="c-loader" v-if="false">
+            <div class="c-spinner">
             </div>
-            <IconSelector :onChange="changeIcon" />
-            <div class="c-input" style="width: 310px;float: right;">
-              <label>
-                Summonername
-              </label>
-              <input type="text"
-                     v-model="username" />
-            </div>
-            <div class="c-input">
-              <label>
-                Host
-              </label>
-              <input type="text"
-                     v-model="host" />
-            </div>
-            <div class="c-input">
-              <label>
-                Port
-              </label>
-              <input type="text"
-                     v-model="port" />
-            </div>
-            <div class="c-input">
-              <label>
-                Path to LoL
-              </label>
-              <input type="text"
-                     v-model="path" />
-            </div>
-            <div class="c-button">
-              <Button text="Login" />
-            </div>
-          </form>
-        </ApolloMutation>
+          </div>
+          <IconSelector :onChange="changeIcon" />
+          <div class="c-input" style="width: 310px;float: right;">
+            <label>
+              Summoner name
+            </label>
+            <input type="text"
+                    v-model="username" />
+          </div>
+          <div class="c-input">
+            <label>
+              Host
+            </label>
+            <input type="text"
+                    v-model="host" />
+          </div>
+          <div class="c-input">
+            <label>
+              Port
+            </label>
+            <input type="text"
+                    v-model="port" />
+          </div>
+          <div class="c-button">
+            <Button text="Login" />
+          </div>
+        </form>
         <div class="c-news">
           <h2>Latest News:</h2>
           <div class="c-news_wrapper">
@@ -102,11 +85,6 @@ import { Component, Vue } from 'vue-property-decorator';
 import Button from '@/components/Button.vue';
 import IconSelector from '@/components/IconSelector.vue';
 import { RANDOM_SPLASHSCREEN } from '../assets/staticData';
-import { GET_USERS } from '../graphql/queries';
-import { CONNECT } from '../graphql/mutations';
-
-import { setContext } from 'apollo-link-context';
-import { HttpLink } from 'apollo-link-http';
 
 @Component({
   components: {
@@ -124,8 +102,6 @@ export default class Login extends Vue {
 
   public data() {
     return {
-      query: GET_USERS,
-      connectMutation: CONNECT,
       username: localStorage.getItem('username'),
       iconId: 0,
       host: localStorage.getItem('host'),
@@ -148,22 +124,6 @@ export default class Login extends Vue {
     localStorage.setItem('username', this.username);
     localStorage.setItem('host', this.host);
     localStorage.setItem('port', this.port);
-    const httpLink = new HttpLink({
-      uri,
-    });
-
-    const authLink = setContext((_, { headers }) => {
-      // get the authentication token from local storage if it exists
-      const token = localStorage.getItem('token-lobby');
-      // return the headers to the context so httpLink can read them
-      return {
-        headers: {
-          ...headers,
-          authorization: token ? token : '',
-        },
-      };
-    });
-    (this.$apollo.provider as any).defaultClient.link = authLink.concat(httpLink);
     callback();
   }
 

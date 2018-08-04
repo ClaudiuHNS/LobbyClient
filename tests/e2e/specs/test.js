@@ -1,8 +1,33 @@
 // https://docs.cypress.io/api/introduction/api.html
 
-describe('My First Test', () => {
-  it('Visits the app root url', () => {
-    cy.visit('/')
-    cy.contains('h1', 'Welcome to Your Vue.js + TypeScript App')
-  })
-})
+describe('LobbyClient test', () => {
+  it('Already installed game', () => {
+    cy.visit('/');
+    cy.contains('Welcome to League Sandbox');
+    cy.contains('NO').click();
+    cy.contains('Step 2');
+    cy.get('[type="text"]').type('C:/LeagueSandbox/GameFolder');
+    cy.contains('Next').click();
+  });
+
+  it('Download game', () => {
+    cy.visit('/');
+    cy.contains('Welcome to League Sandbox');
+    cy.contains('YES').click();
+    cy.contains('START DOWNLOAD').click().click();
+    cy.contains('JOIN LEAGUE SANDBOX NOW');
+  });
+
+  it('Login screen', () => {
+    cy.visit('/#/login');
+    cy.contains('JOIN LEAGUE SANDBOX NOW');
+    cy.contains('Summoner name');
+    cy.contains('Host');
+    cy.contains('Port');
+  });
+
+  it('Not logged should redirect at loggin', () => {
+    cy.visit('/#/home');
+    cy.url().should('include', '/login');
+  });
+});

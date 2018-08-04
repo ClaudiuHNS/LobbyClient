@@ -6,7 +6,6 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { GET_LOBBIES } from '../graphql/queries';
 import Button from '@/components/Button.vue';
 import PlayMenu from '@/components/PlayMenu.vue';
 
@@ -25,7 +24,6 @@ export default class Home extends Vue {
 
   public data() {
     return {
-      getLobbies: GET_LOBBIES,
     };
   }
 }

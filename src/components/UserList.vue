@@ -34,7 +34,6 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { GET_USERS } from '../graphql/queries';
 import Button from '@/components/Button.vue';
 import PlayMenu from '@/components/PlayMenu.vue';
 
@@ -47,7 +46,6 @@ import PlayMenu from '@/components/PlayMenu.vue';
 export default class UserList extends Vue {
   public data() {
     return {
-      getUsers: GET_USERS,
     };
   }
 }

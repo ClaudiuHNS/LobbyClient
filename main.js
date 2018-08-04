@@ -12,6 +12,8 @@ if (process.argv.join(" ").indexOf("--dev") !== -1) {
 }
 
 let win;
+let packages = undefined;
+let dependenciesToInstall = [];
 
 const isAlreadyOpen = app.makeSingleInstance((commandLine, workingDirectory) => {
     if (win) {
@@ -57,13 +59,20 @@ function createWindow () {
         win && win.minimize();
     });
 
-    ipc.on("installPackage", (event, packageUrl, filename, path) => {
-        downloadPackage(packageUrl, filename, path);
+    ipc.on("installPackage", (event, host, packageCreator, packageName, packageVersion, path) => {
+        downloadPackage(host, packageCreator, packageName, packageVersion, path);
     });
 }
 
-function downloadPackage(packageUrl, filename, path) {
+function downloadPackage(host, packageCreator, packageName, packageVersion, path) {
     const packagesDir = path + '/lspm/';
+    loadPackagesInstalled(packagesDir);
+    if(isAlreadyInstalled(packageCreator, packageName, packageVersion) == 1) {
+        manageDependencies(host, path);
+        return;
+    }
+
+    const filename = `${packageCreator}-${packageName}-${packageVersion}.zip`;
     if (!fs.existsSync(packagesDir)){
       fs.mkdirSync(packagesDir);
     }
@@ -78,7 +87,7 @@ function downloadPackage(packageUrl, filename, path) {
       };
     };
 
-    const request = https.get(packageUrl).on('response', (res) => {
+    const request = https.get(`https://${host}/media/${packageCreator}-${packageName}-${packageVersion}.zip`).on('response', (res) => {
       const len = parseInt(res.headers['content-length'], 10);
       let downloaded = 0;
 
@@ -91,8 +100,8 @@ function downloadPackage(packageUrl, filename, path) {
       }).on('end', () => {
           clearTimeout(timeoutId);
           file.end();
-          manageDependencies(packagesDir, filePath, filename);
-          win.webContents.send('install-info', 'Download finished');
+          installPackage(host, path, filePath, packageCreator, packageName, packageVersion);
+          win.webContents.send('install-info', 'Installing package...');
       }).on('error', (err) => {
           file.emit('error', new Error(https.STATUS_CODES[res.statusCode]));
           clearTimeout( timeoutId );
@@ -104,19 +113,68 @@ function downloadPackage(packageUrl, filename, path) {
     let timeoutId = setTimeout(fn, timeout);
 }
 
-function manageDependencies(packagesDir, filePath, filename) {
+/*
+Returns 1 for yes
+Returns 0 for no
+Returns -1 for not same version
+*/
+function isAlreadyInstalled(packageCreator, packageName, packageVersion) {
+    if(packages.installed[`${packageCreator}-${packageName}`] != undefined) {
+        if(packages.installed[`${packageCreator}-${packageName}`] === packageVersion) {
+            return 1;
+        }
+        return -1;
+    }
+    return 0;
+}
+
+function loadPackagesInstalled(packagesDir) {
+    // Register file that we downloaded in packages.lock to track what is installed
     const packageLock = packagesDir + 'packages.lock';
-    let packages = {
-        installed: []
+    packages = {
+        installed: {}
     };
     if(fs.existsSync(packageLock)) {
         packages = JSON.parse(fs.readFileSync(packageLock, 'utf8'));
     }
-    packages.installed.push(filename);
+}
 
+function installPackage(host, path, filePath, packageCreator, packageName, packageVersion) {
+    packages.installed[`${packageCreator}-${packageName}`] = packageVersion;
+
+    const packageLock = path + '/lspm/packages.lock';
     const file = fs.createWriteStream(packageLock);
     file.write(JSON.stringify(packages));
     file.end();
+
+    fs.readFile(filePath, function(err, data) {
+        if (err) throw err;
+        JSZip.loadAsync(data).then(function (zip) {
+            zip.file("manifest.json").async("string").then((res) => {
+                let manifest = JSON.parse(res);
+                if(manifest.dependencies != undefined) {
+                    Object.keys(manifest.dependencies).forEach((dependency) => {
+                        dependenciesToInstall.push({
+                            name: dependency,
+                            version: manifest.dependencies[dependency],
+                        });
+                    });
+                    manageDependencies(host, path);
+                }
+            });
+        });
+    });
+}
+
+function manageDependencies(host, path) {
+    if(dependenciesToInstall.length == 0) {
+        win.webContents.send('install-info', 'Package successfully installed!');
+        return;
+    }
+    const nextDepencyToInstall = dependenciesToInstall.pop();
+    console.log(nextDepencyToInstall);
+    const packageInfo = nextDepencyToInstall.name.split('-');
+    downloadPackage(host, packageInfo[0], packageInfo[1], nextDepencyToInstall.version, path);
 }
   
 app.on('ready', createWindow);

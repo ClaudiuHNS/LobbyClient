@@ -111,8 +111,10 @@ export default class App extends Vue {
       image: '',
     };
 
-    (window as any)._installPackage(`https://${host}/media/${packageCreator}-${packageName}-${packageVersion}.zip`,
-      `${packageCreator}-${packageName}-${packageVersion}.zip`,
+    (window as any)._installPackage(host,
+      packageCreator,
+      packageName,
+      packageVersion,
       localStorage.getItem('path'),
     );
   }

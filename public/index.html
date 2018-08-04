@@ -27,8 +27,8 @@
             ipc.send("minimize");
         };
 
-        window._installPackage = function(packageUrl, filename, path) {
-          ipc.send("installPackage", packageUrl, filename, path);
+        window._installPackage = function(host, packageCreator, packageName, packageVersion, path) {
+          ipc.send("installPackage", host, packageCreator, packageName, packageVersion, path);
         }
     </script>
   </body>

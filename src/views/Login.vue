@@ -13,7 +13,7 @@
         </div>
       </header>
       <div class="c-login-form">
-        <form @submit.prevent="connect()">
+        <form @submit.prevent="() => {}">
           <div class="c-loader" v-if="false">
             <div class="c-spinner">
             </div>
@@ -23,25 +23,26 @@
             <label>
               Summoner name
             </label>
-            <input type="text"
+            <input type="text" name="username"
                     v-model="username" />
           </div>
           <div class="c-input">
             <label>
               Host
             </label>
-            <input type="text"
+            <input type="text" name="host"
                     v-model="host" />
           </div>
           <div class="c-input">
             <label>
               Port
             </label>
-            <input type="text"
+            <input type="text" name="port"
                     v-model="port" />
           </div>
           <div class="c-button">
             <Button text="Login" />
+            <Button @click="hostGame()" text="Host lobby" />
           </div>
         </form>
         <div class="c-news">
@@ -133,6 +134,10 @@ export default class Login extends Vue {
 
   public changeIcon(selectedIcon: number) {
     this.iconId = selectedIcon;
+  }
+
+  public hostGame() {
+    this.$router.replace(this.$route.params.wantedRoute || { name: 'lobby' });
   }
 }
 </script>

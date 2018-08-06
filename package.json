@@ -20,6 +20,9 @@
     "socket.io": "^2.1.1"
   },
   "devDependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.2",
+    "@fortawesome/free-solid-svg-icons": "^5.2.0",
+    "@fortawesome/vue-fontawesome": "^0.1.1",
     "@types/chai": "^4.1.0",
     "@types/mocha": "^5.2.4",
     "@vue/cli-plugin-babel": "^3.0.0-rc.10",

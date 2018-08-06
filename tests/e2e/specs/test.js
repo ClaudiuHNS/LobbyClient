@@ -30,4 +30,11 @@ describe('LobbyClient test', () => {
     cy.visit('/#/home');
     cy.url().should('include', '/login');
   });
+
+  it('Create lobby', () => {
+    cy.visit('/#/login');
+    cy.get('[name="username"]').type('Blitzcrank');
+    cy.contains('Host lobby').click();
+    cy.url().should('include', '/lobby');
+  });
 });

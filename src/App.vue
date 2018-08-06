@@ -41,8 +41,9 @@
     <div class="win-controls">
       <div class="dragbar"></div>
       <ul>
-        <li onclick="_minimize()">-</li>
-        <li class="close" onclick="_close()">X</li>
+        <Settings />
+        <li class="c-controll" onclick="_minimize()"><font-awesome-icon icon="minus" /></li>
+        <li class="c-controll" onclick="_close()"><font-awesome-icon icon="times" /></li>
       </ul>
     </div>
   </div>
@@ -52,11 +53,13 @@
 import { Component, Vue } from 'vue-property-decorator';
 import PlayMenu from '@/components/PlayMenu.vue';
 import UserList from '@/components/UserList.vue';
+import Settings from '@/components/Settings.vue';
 
 @Component({
   components: {
     PlayMenu,
     UserList,
+    Settings,
   },
 })
 export default class App extends Vue {
@@ -73,7 +76,10 @@ export default class App extends Vue {
     };
   }
 
-  public mounted() {
+  public beforeCreate() {
+    if ((window as any)._ipc === undefined) {
+      return;
+    }
     (window as any)._ipc.on('lspm', (event: any, packageLink: any) => {
       let packageInfos = packageLink.replace(/(lspm:\/\/)/, '');
       packageInfos = packageInfos.split('/');
@@ -98,6 +104,10 @@ export default class App extends Vue {
         image: '',
       };
     });
+    (window as any)._ipc.on('packages-info', (event: any, packageList: any) => {
+      this.$store.state.installedPackages = JSON.parse(packageList);
+    });
+    (window as any)._ipc.send('get-packages-info', localStorage.getItem('path'));
     (window as any)._debugInstallPackage = this.installPackage;
   }
 
@@ -122,7 +132,6 @@ export default class App extends Vue {
 </script>
 
 <style lang="scss">
-/* Define a custom web font */
 @font-face {
   font-family: 'Spiegel';
   src: url('https://s.lolstatic.com/awesomefonts/1.0.0/Fonts/Spiegel-Regular.woff') format('woff'), 
@@ -160,13 +169,15 @@ body {
   height:100%;
   width:100%;
   position:relative;
+  font-family: 'Beaufort' !important;
   #app{
     height:100%;
     width:100%;
     position:relative;
     display:flex;
     flex-direction: column;
-    &:before{
+    padding: 5px;
+    /*&:before{
       display: block;
       content: "";
       border: 1px solid rgba(255, 255, 255, 0.7);
@@ -177,7 +188,7 @@ body {
       bottom: 5px;
       left: 5px;
       box-shadow: 0 0 10px 1px #000000;
-    }
+    }*/
     .c-header__outer{
       flex-grow: 0;
       z-index:4;
@@ -205,9 +216,9 @@ body {
         display: flex;
         height: 28px;
         li{
-          padding: 10px;
-          font-size: 30px;
-          line-height: 8px;
+          padding: 0 10px;
+          font-size: 12px;
+          line-height: 28px;
           border: 1px solid #463714;
           border-top: 0;
           color: wheat;

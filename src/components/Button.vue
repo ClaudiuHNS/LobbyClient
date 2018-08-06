@@ -43,6 +43,8 @@ export default class Button extends Vue {
     box-shadow: 0 0 25px rgba(0,0,0,.11);
     transition: color .2s;
     max-width: 100%;
+    margin: 5px;
+    
     &:disabled{
         color: white;
         background: linear-gradient(180deg, white, #ada08f);

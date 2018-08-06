@@ -62,6 +62,11 @@ function createWindow () {
     ipc.on("installPackage", (event, host, packageCreator, packageName, packageVersion, path) => {
         downloadPackage(host, packageCreator, packageName, packageVersion, path);
     });
+
+    ipc.on("get-packages-info", (event, path) => {
+        loadPackagesInstalled(path + "/lspm/");
+        win.webContents.send("packages-info", JSON.stringify(packages));
+    });
 }
 
 function downloadPackage(host, packageCreator, packageName, packageVersion, path) {
@@ -87,7 +92,7 @@ function downloadPackage(host, packageCreator, packageName, packageVersion, path
       };
     };
 
-    const request = https.get(`https://${host}/package/download/${packageCreator}/${packageName}/${packageVersion}`).on('response', (res) => {
+    const request = https.get(`https://${host}/media/${packageCreator}-${packageName}-${packageVersion}.zip`).on('response', (res) => {
       const len = parseInt(res.headers['content-length'], 10);
       let downloaded = 0;
 
@@ -137,6 +142,7 @@ function loadPackagesInstalled(packagesDir) {
     if(fs.existsSync(packageLock)) {
         packages = JSON.parse(fs.readFileSync(packageLock, 'utf8'));
     }
+    return packages;
 }
 
 function installPackage(host, path, filePath, packageCreator, packageName, packageVersion) {
@@ -176,6 +182,8 @@ function manageDependencies(host, path) {
     const packageInfo = nextDepencyToInstall.name.split('-');
     downloadPackage(host, packageInfo[0], packageInfo[1], nextDepencyToInstall.version, path);
 }
+  
+
   
 app.on('ready', createWindow);
   

@@ -37,7 +37,7 @@ import Button from '@/components/Button.vue';
 @Component({
     components: {
         Button,
-    }
+    },
 })
 export default class Settings extends Vue {
     private showDialog!: boolean;

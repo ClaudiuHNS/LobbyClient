@@ -482,4 +482,8 @@ body {
   font-size: 30px;
 }
 
+.md-overlay {
+  z-index: 10;
+}
+
 </style>

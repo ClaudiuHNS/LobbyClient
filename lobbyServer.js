@@ -1,5 +1,7 @@
 const app = require('http').createServer(handler);
 const io = require('socket.io')(app);
+const hasPassword = false;
+const password = 'blitzcrank';
 
 app.listen(9090);
 
@@ -10,9 +12,10 @@ function handler(res, res) {
 
 /* STATIC DATA TO TEST */
 const lobby = {
-    gamemode: "One for all",
+    name: 'Neekhaulas\'s game',
+    creator: 'Neekhaulas',
+    gameMode: 'One for all',
     hostSettings: {
-        "gameMode": "One for all",
         "hostSettings": [
             {
                 "name": "Gold generation rate",
@@ -94,6 +97,22 @@ const lobby = {
     }
 }
 
-io.on('connection', function(socket) {
-    socket.emit('lobby-settings', lobby);
+let users = [];
+
+io.on('connection', (socket) => {
+    socket.on('lobby-connect', (connectionData) => {
+        if(hasPassword) {
+            if(connectionData.password && connectionData.password === password) {
+                socket.emit('lobby-connect', {ok: true, name: lobby.name, creator: lobby.creator, gameMode: lobby.gameMode});
+                users.push({username: connectionData.username, socket});
+                return;
+            }
+        } else {
+            users.push({username: connectionData.username, socket});
+            socket.emit('lobby-connect', {ok: true, name: lobby.name, creator: lobby.creator, gameMode: lobby.gameMode});
+            return;
+        }
+        socket.emit('lobby-connect', {ok: false});
+    });
 });
+

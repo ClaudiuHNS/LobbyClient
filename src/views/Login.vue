@@ -14,7 +14,7 @@
       </header>
       <div class="c-login-form">
         <form @submit.prevent="() => {}">
-          <div class="c-loader" v-if="false">
+          <div class="c-loader" v-if="loading">
             <div class="c-spinner">
             </div>
           </div>
@@ -41,7 +41,7 @@
                     v-model="port" />
           </div>
           <div class="c-button">
-            <Button text="Login" />
+            <Button @click="login()" text="Connect" />
             <Button @click="hostGame()" text="Host lobby" />
           </div>
         </form>
@@ -86,6 +86,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import Button from '@/components/Button.vue';
 import IconSelector from '@/components/IconSelector.vue';
 import { RANDOM_SPLASHSCREEN } from '../assets/staticData';
+import NetworkService from '../services/networkService';
 
 @Component({
   components: {
@@ -94,12 +95,12 @@ import { RANDOM_SPLASHSCREEN } from '../assets/staticData';
   },
 })
 export default class Login extends Vue {
-  private path!: string;
   private username!: string;
   private host!: string;
   private port!: string;
   private splashVideos!: string[];
   private iconId!: number;
+  private loading!: boolean;
 
   public data() {
     return {
@@ -107,8 +108,8 @@ export default class Login extends Vue {
       iconId: 0,
       host: localStorage.getItem('host'),
       port: localStorage.getItem('port'),
-      path: localStorage.getItem('path'),
       splashVideo: RANDOM_SPLASHSCREEN,
+      loading: false,
     };
   }
 
@@ -116,16 +117,6 @@ export default class Login extends Vue {
     localStorage.setItem('token-lobby', result.data.connect.token);
     this.$store.state.logged = true;
     this.redirect();
-  }
-
-  public connect(callback: any) {
-    const uri = `http://${this.host}:${this.port}/graphql`;
-    // Save creds for faster login
-    localStorage.setItem('path', this.path);
-    localStorage.setItem('username', this.username);
-    localStorage.setItem('host', this.host);
-    localStorage.setItem('port', this.port);
-    callback();
   }
 
   public redirect() {
@@ -138,6 +129,18 @@ export default class Login extends Vue {
 
   public hostGame() {
     this.$router.replace(this.$route.params.wantedRoute || { name: 'lobby' });
+  }
+
+  public login() {
+    this.loading = true;
+    localStorage.setItem('username', this.username);
+    localStorage.setItem('host', this.host);
+    localStorage.setItem('port', this.port);
+    NetworkService.connectToLobby(`http://${this.host}:${this.port}`, this.username).then(() => {
+      this.$router.replace(this.$route.params.wantedRoute || { name: 'lobby' });
+    }).catch(() => {
+      this.loading = false;
+    });
   }
 }
 </script>

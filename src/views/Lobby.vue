@@ -1,7 +1,7 @@
 <template>
     <div class="c-lobby">
         <div class="c-lobby__infos">
-            <div class="c-lobby__name">NEEKHAULAS'S GAME</div>
+            <div class="c-lobby__name">{{ lobby.name }}</div>
             <div class="c-lobby__gamemode">Summoner's Rift - 5v5 - Blind pick</div>
         </div>
         <div class="md-layout">
@@ -49,6 +49,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import Button from '@/components/Button.vue';
+import NetworkService from '../services/networkService';
 
 @Component({
     components: {
@@ -56,8 +57,23 @@ import Button from '@/components/Button.vue';
     },
 })
 export default class Lobby extends Vue {
+    private lobby!: lobby.Lobby;
+
+    public data() {
+        return({
+            lobby: NetworkService.lobby,
+        });
+    }
+
+    public created() {
+        if (!NetworkService.lobbyConnection) {
+            this.$router.replace(this.$route.params.wantedRoute || { name: 'login' });
+        }
+    }
+
     public back() {
         // Disconnect
+        NetworkService.disconnect();
         this.$router.replace(this.$route.params.wantedRoute || { name: 'login' });
     }
 }
